@@ -3,12 +3,12 @@ def make_key(i, j):
 
 
 def make_possibility_cells(board):
-    cells = {}
+    result = {}
     for i, row in enumerate(board):
         for j, number in enumerate(row):
             key = make_key(i, j)
             if number != 0:
-                cells[key] = number
+                result[key] = number
             else:
-                cells[key] = [i for i in range(1, 10)]
-    return cells
+                result[key] = [i for i in range(1, 10)]
+    return result

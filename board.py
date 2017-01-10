@@ -1,9 +1,9 @@
 def load_board(path):
-    board = []
+    result = []
     with open(path) as file:
         for line in file:
-            board.append([int(i) for i in line.split(',')])
-    return board
+            result.append([int(i) for i in line.split(',')])
+    return result
 
 
 def print_board(board):
