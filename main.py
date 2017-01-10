@@ -36,18 +36,29 @@ def choose(x):
     return 0
 
 
+def all_found():
+    for i, row in enumerate(board):
+        for j, number in enumerate(row):
+            if number == 0: return False
+    return True
+
+
 cells = {}
 for i, row in enumerate(board):
     for j, number in enumerate(row):
-        cells[make_key(i, j)] = [i for i in range(1, 10)]
+        key = make_key(i, j)
+        if number != 0:
+            cells[key] = number
+        else:
+            cells[key] = [i for i in range(1, 10)]
 
-for times in range(100):
+counter = 0
+while not all_found():
+    counter += 1
     for i, row in enumerate(board):
         for j, number in enumerate(row):
             key = make_key(i, j)
-            if number != 0:
-                cells[key] = number
-            else:
+            if number == 0:
                 linear_check(row, cells[key])
                 linear_check([board[r][j] for r in range(0, 9)], cells[key])
                 quadrant_check(i, j, cells[key])
@@ -59,3 +70,6 @@ for times in range(100):
 for i, row in enumerate(board):
     if i % 3 == 0: print()
     print(row)
+
+
+print(counter)
