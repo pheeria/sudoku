@@ -47,7 +47,7 @@ def solve(board):
                     horizontal = row
                     linear_check(horizontal, cells[key])
 
-                    vertical = [board[r][j] for r in range(9)]
+                    vertical = [row[j] for row in board]
                     linear_check(vertical, cells[key])
 
                     quadrant_check(board, i, j, cells[key])
