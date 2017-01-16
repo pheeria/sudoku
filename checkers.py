@@ -35,6 +35,15 @@ def all_found(board):
     return True
 
 
+def possibilities_linear_check(possibilities, wanted_key, horizontal):
+    if horizontal:
+        filtered = {k: v for (k, v) in possibilities.items()
+                    if k.startswith(str(wanted_key)) and type(v) == list and
+                    len(v) == 2}
+        print(filtered)
+
+
+
 def solve(board):
     cells = make_possibility_cells(board)
     counter = 0
@@ -51,6 +60,8 @@ def solve(board):
                     linear_check(vertical, cells[key])
 
                     quadrant_check(board, i, j, cells[key])
+
+                    possibilities_linear_check(cells, i, True)
 
                     if len(cells[key]) == 1:
                         board[i][j] = cells[key].pop()
