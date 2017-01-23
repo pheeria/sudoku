@@ -1,5 +1,4 @@
 from cells import *
-from board import print_board
 
 
 def linear_check(line, possibilities):
@@ -37,10 +36,34 @@ def all_found(board):
 
 def possibilities_linear_check(possibilities, wanted_key, horizontal):
     if horizontal:
-        filtered = {k: v for (k, v) in possibilities.items()
+
+        line = {k:v for k, v in possibilities.items()
+                    if k.startswith(str(wanted_key))}
+
+        filtered = {k: v for k, v in line.items()
                     if k.startswith(str(wanted_key)) and type(v) == list and
                     len(v) == 2}
-        print(filtered)
+
+        if filtered and len(filtered) > 1:
+
+
+            pairs = []
+            for index, value in line.items():
+                skipped = {idx: val
+                           for idx, val in line.items()
+                           if idx != index}
+
+                for k, v in skipped.items():
+                    if value == v:
+                        pairs.append(index)
+                        pairs.append(k)
+                        print(pairs)
+
+                for ck, cv in line.items():
+                    if len(pairs) > 1 and ck not in pairs:
+                        for cellValList in cv:
+                            if cellValList in value:
+                                possibilities[ck].remove(cellValList)
 
 
 
@@ -65,7 +88,5 @@ def solve(board):
 
                     if len(cells[key]) == 1:
                         board[i][j] = cells[key].pop()
-        print('After the {} cycle'.format(counter))
-        print_board(board)
     print('Solved in {} cycles'.format(counter))
     return board
