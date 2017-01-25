@@ -1,5 +1,5 @@
 from cells import *
-
+import copy
 
 def linear_check(line, possibilities):
     for num in line:
@@ -36,35 +36,39 @@ def all_found(board):
 
 def possibilities_linear_check(possibilities, wanted_key, horizontal):
     if horizontal:
+        line = {k: v for k, v in possibilities.items()
+                    if k.startswith(str(wanted_key)) and type(v) == list}
+    else:
+        line = {k: v for k, v in possibilities.items()
+                    if k.endswith(str(wanted_key)) and type(v) == list}
 
-        line = {k:v for k, v in possibilities.items()
-                    if k.startswith(str(wanted_key))}
+    filtered = {k: v for k, v in line.items()
+                if k.startswith(str(wanted_key)) and type(v) == list and
+                len(v) == 2}
 
-        filtered = {k: v for k, v in line.items()
-                    if k.startswith(str(wanted_key)) and type(v) == list and
-                    len(v) == 2}
+    if filtered and len(filtered) > 1:
 
-        if filtered and len(filtered) > 1:
+        pairs = []
+        to_delete = []
+        for index, value in filtered.items():
+            skipped = {idx: val
+                       for idx, val in filtered.items()
+                       if idx != index}
 
-
-            pairs = []
-            for index, value in line.items():
-                skipped = {idx: val
-                           for idx, val in line.items()
-                           if idx != index}
-
-                for k, v in skipped.items():
-                    if value == v:
+            for k, v in skipped.items():
+                if value == v:
+                    if index not in pairs:
                         pairs.append(index)
+                    if k not in pairs:
                         pairs.append(k)
-                        print(pairs)
+                    to_delete = value
+                    print(pairs)
 
-                for ck, cv in line.items():
-                    if len(pairs) > 1 and ck not in pairs:
-                        for cellValList in cv:
-                            if cellValList in value:
-                                possibilities[ck].remove(cellValList)
-
+        for ck, cv in line.items():
+            if ck not in pairs:
+                new_list = [cvl for cvl in cv if cvl in to_delete]
+                for clVlLt in new_list:
+                    possibilities[ck].remove(clVlLt)
 
 
 def solve(board):
@@ -85,8 +89,9 @@ def solve(board):
                     quadrant_check(board, i, j, cells[key])
 
                     possibilities_linear_check(cells, i, True)
+                    possibilities_linear_check(cells, i, False)
 
                     if len(cells[key]) == 1:
-                        board[i][j] = cells[key].pop()
+                        board[i][j] = cells[key][0]
     print('Solved in {} cycles'.format(counter))
     return board
