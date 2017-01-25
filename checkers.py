@@ -1,5 +1,5 @@
 from cells import *
-import copy
+
 
 def linear_check(line, possibilities):
     for num in line:
@@ -38,13 +38,17 @@ def possibilities_linear_check(possibilities, wanted_key, horizontal):
     if horizontal:
         line = {k: v for k, v in possibilities.items()
                     if k.startswith(str(wanted_key)) and type(v) == list}
+
+        filtered = {k: v for k, v in line.items()
+                    if k.startswith(str(wanted_key)) and type(v) == list and
+                    len(v) == 2}
     else:
         line = {k: v for k, v in possibilities.items()
                     if k.endswith(str(wanted_key)) and type(v) == list}
 
-    filtered = {k: v for k, v in line.items()
-                if k.startswith(str(wanted_key)) and type(v) == list and
-                len(v) == 2}
+        filtered = {k: v for k, v in line.items()
+                    if k.endswith(str(wanted_key)) and type(v) == list and
+                    len(v) == 2}
 
     if filtered and len(filtered) > 1:
 
@@ -89,7 +93,7 @@ def solve(board):
                     quadrant_check(board, i, j, cells[key])
 
                     possibilities_linear_check(cells, i, True)
-                    possibilities_linear_check(cells, i, False)
+                    possibilities_linear_check(cells, j, False)
 
                     if len(cells[key]) == 1:
                         board[i][j] = cells[key][0]
